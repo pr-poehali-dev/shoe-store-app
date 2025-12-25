@@ -17,13 +17,17 @@ interface User {
 }
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
+  priceWithDiscount?: number;
   image: string;
-  sizes: number[];
   category: string;
   brand: string;
+  description: string;
+  stock: number;
+  discount: number;
+  supplier: string;
 }
 
 interface Order {
@@ -50,12 +54,110 @@ const MOCK_USERS: User[] = [
 ];
 
 const MOCK_PRODUCTS: Product[] = [
-  { id: 1, name: 'Кроссовки Nike Air Max', price: 8999, image: '/placeholder.svg', sizes: [38, 39, 40, 41, 42, 43], category: 'Кроссовки', brand: 'Nike' },
-  { id: 2, name: 'Туфли классические', price: 5499, image: '/placeholder.svg', sizes: [38, 39, 40, 41, 42], category: 'Туфли', brand: 'Respect' },
-  { id: 3, name: 'Ботинки зимние', price: 7299, image: '/placeholder.svg', sizes: [39, 40, 41, 42, 43, 44], category: 'Ботинки', brand: 'Timberland' },
-  { id: 4, name: 'Кеды Converse', price: 4599, image: '/placeholder.svg', sizes: [37, 38, 39, 40, 41, 42], category: 'Кеды', brand: 'Converse' },
-  { id: 5, name: 'Сандалии летние', price: 2999, image: '/placeholder.svg', sizes: [38, 39, 40, 41, 42], category: 'Сандалии', brand: 'Adidas' },
-  { id: 6, name: 'Слипоны Vans', price: 3799, image: '/placeholder.svg', sizes: [38, 39, 40, 41, 42, 43], category: 'Слипоны', brand: 'Vans' },
+  { 
+    id: 'А112Т4', 
+    name: 'Ботинки', 
+    price: 4990, 
+    priceWithDiscount: 4840, 
+    image: 'https://cdn.poehali.dev/files/image.png', 
+    category: 'Женская обувь', 
+    brand: 'Kari',
+    description: 'Женские Ботинки демисезонные kari',
+    stock: 6,
+    discount: 3,
+    supplier: 'Kari'
+  },
+  { 
+    id: 'F635R4', 
+    name: 'Ботинки', 
+    price: 3244, 
+    priceWithDiscount: 3179, 
+    image: 'https://cdn.poehali.dev/files/image.png', 
+    category: 'Женская обувь', 
+    brand: 'Marco Tozzi',
+    description: 'Ботинки Marco Tozzi женские демисезонные, размер 39, цвет бежевый',
+    stock: 13,
+    discount: 2,
+    supplier: 'Обувь для вас'
+  },
+  { 
+    id: 'H782T5', 
+    name: 'Туфли', 
+    price: 4499, 
+    priceWithDiscount: 4319, 
+    image: 'https://cdn.poehali.dev/files/image.png', 
+    category: 'Мужская обувь', 
+    brand: 'Kari',
+    description: 'Туфли kari мужские классика MYZ21AW-450A, размер 43, цвет: черный',
+    stock: 5,
+    discount: 4,
+    supplier: 'Kari'
+  },
+  { 
+    id: 'G783F5', 
+    name: 'Ботинки', 
+    price: 5900, 
+    priceWithDiscount: 5782, 
+    image: 'https://cdn.poehali.dev/files/image.png', 
+    category: 'Мужская обувь', 
+    brand: 'Рос',
+    description: 'Мужские ботинки Рос-Обувь кожаные с натуральным мехом',
+    stock: 8,
+    discount: 2,
+    supplier: 'Kari'
+  },
+  { 
+    id: 'J384T6', 
+    name: 'Ботинки', 
+    price: 3800, 
+    priceWithDiscount: 3724, 
+    image: 'https://cdn.poehali.dev/files/image.png', 
+    category: 'Мужская обувь', 
+    brand: 'Rieker',
+    description: 'B3430/14 Полуботинки мужские Rieker',
+    stock: 16,
+    discount: 2,
+    supplier: 'Обувь для вас'
+  },
+  { 
+    id: 'D572U8', 
+    name: 'Кроссовки', 
+    price: 4100, 
+    priceWithDiscount: 3977, 
+    image: 'https://cdn.poehali.dev/files/image.png', 
+    category: 'Мужская обувь', 
+    brand: 'Рос',
+    description: '129615-4 Кроссовки мужские',
+    stock: 6,
+    discount: 3,
+    supplier: 'Обувь для вас'
+  },
+  { 
+    id: 'F572H7', 
+    name: 'Туфли', 
+    price: 2700, 
+    priceWithDiscount: 2646, 
+    image: 'https://cdn.poehali.dev/files/image.png', 
+    category: 'Женская обувь', 
+    brand: 'Marco Tozzi',
+    description: 'Туфли Marco Tozzi женские летние, размер 39, цвет черный',
+    stock: 14,
+    discount: 2,
+    supplier: 'Kari'
+  },
+  { 
+    id: 'D329H3', 
+    name: 'Полуботинки', 
+    price: 1890, 
+    priceWithDiscount: 1814, 
+    image: 'https://cdn.poehali.dev/files/image.png', 
+    category: 'Женская обувь', 
+    brand: 'Alessio Nesca',
+    description: 'Полуботинки Alessio Nesca женские 3-30797-47, размер 37, цвет: бордовый',
+    stock: 4,
+    discount: 4,
+    supplier: 'Обувь для вас'
+  },
 ];
 
 const MOCK_ORDERS: Order[] = [
@@ -75,8 +177,8 @@ export default function Index() {
   const [loginInput, setLoginInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [activeTab, setActiveTab] = useState<'catalog' | 'orders' | 'pickup'>('catalog');
-  const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const handleLogin = () => {
     const user = MOCK_USERS.find(u => u.login === loginInput && u.password === passwordInput);
@@ -103,20 +205,20 @@ export default function Index() {
     setActiveTab('catalog');
   };
 
-  const toggleSize = (size: number) => {
-    setSelectedSizes(prev =>
-      prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
-    );
-  };
+
 
   const canUseFilters = currentUser?.role === 'manager' || currentUser?.role === 'admin';
   const canManageOrders = currentUser?.role === 'manager' || currentUser?.role === 'admin';
 
+  const categories = Array.from(new Set(MOCK_PRODUCTS.map(p => p.category)));
+
   const filteredProducts = MOCK_PRODUCTS.filter(product => {
-    const matchesSize = selectedSizes.length === 0 || product.sizes.some(s => selectedSizes.includes(s));
-    const matchesSearch = !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          product.brand.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSize && matchesSearch;
+    const matchesCategory = !selectedCategory || product.category === selectedCategory;
+    const matchesSearch = !searchQuery || 
+                          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          product.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
   });
 
   if (!isLoggedIn) {
@@ -243,7 +345,7 @@ export default function Index() {
                 <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
                   <div className="mb-4">
                     <Input
-                      placeholder="Поиск по названию или бренду..."
+                      placeholder="Поиск по названию, бренду или описанию..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="max-w-md"
@@ -251,31 +353,26 @@ export default function Index() {
                   </div>
                   
                   <div>
-                    <p className="text-sm font-semibold text-gray-700 mb-3">Фильтр по размерам:</p>
-                    <div className="flex flex-wrap gap-3">
-                      {[37, 38, 39, 40, 41, 42, 43, 44].map(size => (
-                        <label
-                          key={size}
-                          className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors"
+                    <p className="text-sm font-semibold text-gray-700 mb-3">Категория:</p>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        variant={selectedCategory === '' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setSelectedCategory('')}
+                      >
+                        Все
+                      </Button>
+                      {categories.map(category => (
+                        <Button
+                          key={category}
+                          variant={selectedCategory === category ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setSelectedCategory(category)}
                         >
-                          <Checkbox
-                            checked={selectedSizes.includes(size)}
-                            onCheckedChange={() => toggleSize(size)}
-                          />
-                          <span className="text-sm font-medium">{size}</span>
-                        </label>
+                          {category}
+                        </Button>
                       ))}
                     </div>
-                    {selectedSizes.length > 0 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setSelectedSizes([])}
-                        className="mt-3"
-                      >
-                        Сбросить фильтры
-                      </Button>
-                    )}
                   </div>
                 </div>
               )}
@@ -292,19 +389,31 @@ export default function Index() {
                     />
                   </div>
                   <CardContent className="p-5">
-                    <Badge variant="secondary" className="mb-2">{product.brand}</Badge>
-                    <h3 className="font-semibold text-lg text-gray-800 mb-2">{product.name}</h3>
-                    <p className="text-2xl font-bold text-primary mb-3">{product.price.toLocaleString('ru-RU')} ₽</p>
-                    <div className="mb-4">
-                      <p className="text-xs text-gray-500 mb-2">Доступные размеры:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {product.sizes.map(size => (
-                          <span key={size} className="text-xs bg-gray-100 px-2 py-1 rounded">
-                            {size}
-                          </span>
-                        ))}
-                      </div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="secondary">{product.brand}</Badge>
+                      {product.discount > 0 && (
+                        <Badge className="bg-red-500 text-white">-{product.discount}%</Badge>
+                      )}
                     </div>
+                    <h3 className="font-semibold text-lg text-gray-800 mb-2">{product.name}</h3>
+                    <p className="text-xs text-gray-500 mb-3 line-clamp-2">{product.description}</p>
+                    
+                    <div className="flex items-baseline gap-2 mb-2">
+                      {product.discount > 0 ? (
+                        <>
+                          <p className="text-2xl font-bold text-primary">{product.priceWithDiscount?.toLocaleString('ru-RU')} ₽</p>
+                          <p className="text-sm text-gray-400 line-through">{product.price.toLocaleString('ru-RU')} ₽</p>
+                        </>
+                      ) : (
+                        <p className="text-2xl font-bold text-primary">{product.price.toLocaleString('ru-RU')} ₽</p>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
+                      <Icon name="Package" size={14} />
+                      <span>На складе: {product.stock} шт.</span>
+                    </div>
+
                     {currentUser?.role !== 'guest' && (
                       <Button className="w-full" onClick={() => toast.success('Товар добавлен в корзину!')}>
                         <Icon name="ShoppingCart" size={16} className="mr-2" />
@@ -320,7 +429,7 @@ export default function Index() {
               <div className="text-center py-16">
                 <Icon name="Search" size={48} className="mx-auto mb-4 text-gray-300" />
                 <p className="text-gray-500 text-lg">Товары не найдены</p>
-                <Button variant="link" onClick={() => { setSelectedSizes([]); setSearchQuery(''); }}>
+                <Button variant="link" onClick={() => { setSelectedCategory(''); setSearchQuery(''); }}>
                   Сбросить фильтры
                 </Button>
               </div>
